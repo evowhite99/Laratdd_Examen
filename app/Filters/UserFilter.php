@@ -16,9 +16,22 @@ class UserFilter extends QueryFilter
         'login' => 'last_login_at'
     ];
 
+    public function team($query, $team)
+    {
+        if ($team === 'with_team') {
+            $query->has('team');
+        } elseif ($team === 'without_team') {
+            $query->doesntHave('team');
+        }
+    }
+
+
+
+
     public function rules(): array
     {
         return [
+            'team' => 'in:with_team,without_team',
             'search' => 'filled',
             'state' => 'in:active,inactive',
             'role' => 'in:admin,user',
