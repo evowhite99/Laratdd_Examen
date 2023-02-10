@@ -29,6 +29,8 @@ class ProfileController extends Controller
             'email' => $request->email,
         ]);
 
+
+
         $user->profile->update([
             'bio' => $request->bio,
             'twitter' => $request->twitter,

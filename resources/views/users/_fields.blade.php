@@ -44,6 +44,10 @@
         @endforeach
     </select>
 </div>
+<div class="form-group">
+    <label for="profession_new">O escribir una nueva:</label>
+    <input type="text" name="profession_new" id="profession_new" class="form-control" value="{{ old('profession_new') }}">
+</div>
 
 <h5>Habilidades</h5>
 
