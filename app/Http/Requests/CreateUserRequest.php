@@ -61,6 +61,9 @@ class CreateUserRequest extends FormRequest
             'last_name.required' => 'El campo apellidos es obligatorio',
             'email.required' => 'El campo email es obligatorio',
             'password.required' => 'El campo contraseña es obligatorio',
+            'bio.required' => 'El campo biografia es obligatorio',
+            'twitter.present' => 'El campo twitter es obligatorio',
+            'twitter.url' => 'El campo twitter tiene que ser una url',
         ];
     }
 

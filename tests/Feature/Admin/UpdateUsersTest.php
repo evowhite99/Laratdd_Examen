@@ -25,6 +25,63 @@ class UpdateUsersTest extends TestCase
         'role' => 'user',
     ];
 
+
+    /** @test */
+    public function twitter_obligatorio()
+    {
+        $this->withExceptionHandling();
+
+        $user = factory(User::class)->create();
+
+        $this->from('usuarios/' . $user->id . '/editar')
+            ->put('usuarios/' . $user->id, [
+                'first_name' => 'Pepe',
+                'last_name' => 'Pérez',
+                'email' => 'pepe@mail.es',
+                'password' => '123456',
+                'profession_id' => '',
+                'bio' => 'Programador de Laravel y Vue.js',
+                'role' => 'user',
+                'state' => 'active',
+            ])->assertSessionHasErrors('twitter', ['first_name' => 'Pepe']);
+
+        $this->assertDatabaseMissing('users', ['first_name' => 'Pepe']);
+    }
+
+    /** @test */
+    public function twitter_url()
+    {
+        $this->withExceptionHandling();
+
+        $user = factory(User::class)->create();
+
+        $this->from('usuarios/' . $user->id . '/editar')
+            ->put('usuarios/' . $user->id, $this->getValidData([
+                'twitter' => 'url-no-valida'
+            ]))->assertRedirect('usuarios/' . $user->id . '/editar')
+            ->assertSessionHasErrors('twitter');
+
+        $this->assertDatabaseMissing('users', ['first_name' => 'Pepe']);
+    }
+
+    /** @test */
+    function biografia_obligatorio()
+    {
+        $this->withExceptionHandling();
+
+        $user = factory(User::class)->create();
+
+        $this->from('usuarios/'. $user->id .'/editar')
+            ->put('usuarios/'. $user->id, $this->getValidData([
+                'bio' => '',
+            ]))->assertRedirect('usuarios/' . $user->id . '/editar')
+            ->assertSessionHasErrors(['bio']);
+
+        $this->assertDatabaseMissing('users', ['first_name' => 'Pepe']);
+    }
+
+
+
     /** @test */
     function it_loads_the_edit_user_page()
     {

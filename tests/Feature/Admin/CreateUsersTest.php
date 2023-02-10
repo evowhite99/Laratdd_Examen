@@ -25,6 +25,61 @@ class CreateUsersTest extends TestCase
         'state' => 'active',
     ];
 
+
+
+    /** @test */
+
+    public function twitter_obligatorio()
+    {
+        $this->handleValidationExceptions();
+
+        $this->post('usuarios', [
+            'first_name' => 'Pepe',
+            'last_name' => 'Pérez',
+            'email' => 'pepe@mail.es',
+            'password' => '123456',
+            'profession_id' => '',
+            'bio' => 'Programador de Laravel y Vue.js',
+            'role' => 'user',
+            'state' => 'active',
+        ])->assertSessionHasErrors(['twitter' => 'El campo twitter es obligatorio']);
+
+        $this->assertDatabaseEmpty('users');
+        $this->assertDatabaseEmpty('user_profiles');
+    }
+
+    /** @test */
+    function biografia_obligatorio()
+    {
+        $this->withExceptionHandling();
+
+        $this->from('usuarios/nuevo')
+            ->post('usuarios', $this->getValidData([
+                'bio' => ''
+            ]))
+            ->assertSessionHasErrors(['bio' => 'El campo biografia es obligatorio']);
+
+        $this->assertDatabaseEmpty('users');
+        $this->assertDatabaseEmpty('user_profiles');
+    }
+
+
+
+    /** @test */
+    function twitter_url()
+    {
+        $this->withExceptionHandling();
+
+        $this->from('usuarios/nuevo')
+            ->post('usuarios', $this->getValidData([
+                'twitter' => 'url-no-valida',
+            ]))
+            ->assertSessionHasErrors(['twitter' => 'El campo twitter tiene que ser una url']);
+
+        $this->assertDatabaseEmpty('users');
+        $this->assertDatabaseEmpty('user_profiles');
+    }
+
     /** @test */
     function it_loads_the_new_users_page()
     {
