@@ -14,6 +14,30 @@ class DeleteUsersTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
+    public function restaurar()
+    {
+        $user = factory(User::class)->create([
+            'email' => 'prueba@gmail.com',
+            'deleted_at' => now(),
+        ]);
+
+        $user->profile()->update([
+            'deleted_at' => now(),
+        ]);
+
+        $user->restore($user->id);
+        $user->profile()->restore($user->id);
+
+        $this->assertDatabaseHas('users', [
+            'email' => 'prueba@gmail.com',
+            'deleted_at' => null,
+
+        ])->assertDatabaseHas('user_profiles', [
+            'deleted_at' => null,
+        ]);
+    }
+
+    /** @test */
     function it_completely_deletes_a_user()
     {
         $user = factory(User::class)->create([
