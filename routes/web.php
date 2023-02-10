@@ -11,6 +11,10 @@
 |
 */
 
+
+Route::get('usuarios/restaurar/{id}', 'UserController@restore')->name('users.restaurar');
+
+
 Route::get('/', function () {
     return view('welcome');
 });

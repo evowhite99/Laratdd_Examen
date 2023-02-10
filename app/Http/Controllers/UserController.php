@@ -7,6 +7,18 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
+
+
+   public function restore($id)
+   {
+        $user = User::onlyTrashed()->where('id', $id)->firstOrFail();
+        $user->restore();
+        return redirect()->route('users.trashed');
+    }
+
+
+
+
     public function index(Sortable $sortable)
     {
         $users = User::query()
